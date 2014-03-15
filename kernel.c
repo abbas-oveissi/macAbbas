@@ -3,7 +3,7 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
- 
+
 /* Check if the compiler thinks if we are targeting the wrong operating system. */
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -35,6 +35,8 @@ enum vga_color
 	COLOR_WHITE = 15,
 };
  
+
+
 uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
 	return fg | bg << 4;
@@ -79,6 +81,31 @@ void terminal_initialize()
 	}
 }
  
+/* We will use this later on for reading from the I/O ports to get data
+*  from devices such as the keyboard. We are using what is called
+*  'inline assembly' in these routines to actually do the work */
+unsigned char inportb (unsigned short _port)
+{
+    unsigned char rv;
+    __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
+    return rv;
+}
+
+/* We will use this to write to I/O ports to send bytes to devices. This
+*  will be used in the next tutorial for changing the textmode cursor
+*  position. Again, we use some inline assembly for the stuff that simply
+*  cannot be done in C */
+void outportb (unsigned short _port, unsigned char _data)
+{
+    __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
+}
+
+
+uint8_t keyboard_read_scanCode()
+{
+	return inportb(0X60);
+}
+
 void terminal_setcolor(uint8_t color)
 {
 	terminal_color = color;
@@ -125,6 +152,28 @@ extern "C" /* Use C linkage for kernel_main. */
 void kernel_main()
 {
 	terminal_initialize();
+
+
+	while(true)
+	{
+		uint8_t status= inportb(0x64);
+		if(status&0x1==1)
+		{
+			uint8_t a= keyboard_read_scanCode();
+			if(a==0x1e)
+			{
+				terminal_writestring("a\n");
+			}
+			else if(a==0x1f)
+			{
+				terminal_writestring("s\n");
+			}
+		}
+
+	}
+
+
+	
 	/* Since there is no support for newlines in terminal_putchar yet, \n will
 	   produce some VGA specific character instead. This is normal. */
 	terminal_writestring("be os man khosh oomadid :D!\nMac Abbas OS");
