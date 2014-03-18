@@ -72,6 +72,99 @@ _start:
 .Lhang:
 	jmp .Lhang
 
+
+
+
+
+
+
+
+.global isr0
+.global isr1
+.global irq1
+
+#  0: Divide By Zero Exception
+isr0:
+    cli
+    push  $0   
+    push  $0
+    jmp isr_common_stub
+
+#  1: Debug Exception
+isr1:
+    cli
+    push  $0
+    push  $1
+    jmp isr_common_stub
+   
+irq1:
+    cli
+    push  $0  
+    push  $32
+    jmp irq_common_stub
+
+
+
+.extern fault_handler
+
+isr_common_stub:
+    pusha
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
+    movw $0x10 ,%ax
+    movw %ax ,%ds
+    movw %ax ,%es
+    movw %ax ,%fs
+    movw %ax ,%gs
+    movl  %esp  ,%eax
+    pushl %eax
+    movl %eax, fault_handler
+    call %eax       
+    popl %eax
+    popw %gs
+    popw %fs
+    popw %es
+    popw %ds
+    popa
+    add $8,%esp     
+    iret           
+
+
+.extern irq_handler
+
+irq_common_stub:
+    pusha
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
+    movw $0x10 ,%ax
+    movw %ax ,%ds
+    movw %ax ,%es
+    movw %ax ,%fs
+    movw %ax ,%gs
+    movl  %esp  ,%eax
+    pushl %eax
+    movl %eax, irq_handler
+    call %eax       
+    popl %eax
+    popw %gs
+    popw %fs
+    popw %es
+    popw %ds
+    popa
+    add $8,%esp 
+    iret
+
+
+.global idt_load
+.extern idtp
+idt_load:
+    lidt (idtp)
+    ret
+
 # Set the size of the _start symbol to the current location '.' minus its start.
 # This is useful when debugging or when you implement call tracing.
 .size _start, . - _start

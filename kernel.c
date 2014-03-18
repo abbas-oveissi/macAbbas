@@ -3,6 +3,7 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
+#include "system.h"
 
 /* Check if the compiler thinks if we are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -14,76 +15,6 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
  
-/* Hardware text mode color constants. */
-enum vga_color
-{
-	COLOR_BLACK = 0,
-	COLOR_BLUE = 1,
-	COLOR_GREEN = 2,
-	COLOR_CYAN = 3,
-	COLOR_RED = 4,
-	COLOR_MAGENTA = 5,
-	COLOR_BROWN = 6,
-	COLOR_LIGHT_GREY = 7,
-	COLOR_DARK_GREY = 8,
-	COLOR_LIGHT_BLUE = 9,
-	COLOR_LIGHT_GREEN = 10,
-	COLOR_LIGHT_CYAN = 11,
-	COLOR_LIGHT_RED = 12,
-	COLOR_LIGHT_MAGENTA = 13,
-	COLOR_LIGHT_BROWN = 14,
-	COLOR_WHITE = 15,
-};
- 
-
-
-uint8_t make_color(enum vga_color fg, enum vga_color bg)
-{
-	return fg | bg << 4;
-}
- 
-uint16_t make_vgaentry(char c, uint8_t color)
-{
-	uint16_t c16 = c;
-	uint16_t color16 = color;
-	return c16 | color16 << 8;
-}
- 
-size_t strlen(const char* str)
-{
-	size_t ret = 0;
-	while ( str[ret] != 0 )
-		ret++;
-	return ret;
-}
- 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 24;
- 
-size_t terminal_row;
-size_t terminal_column;
-uint8_t terminal_color;
-uint16_t* terminal_buffer;
- 
-void terminal_initialize()
-{
-	terminal_row = 0;
-	terminal_column = 0;
-	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
-	terminal_buffer = (uint16_t*) 0xB8000;
-	for ( size_t y = 0; y < VGA_HEIGHT; y++ )
-	{
-		for ( size_t x = 0; x < VGA_WIDTH; x++ )
-		{
-			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
-		}
-	}
-}
- 
-/* We will use this later on for reading from the I/O ports to get data
-*  from devices such as the keyboard. We are using what is called
-*  'inline assembly' in these routines to actually do the work */
 unsigned char inportb (unsigned short _port)
 {
     unsigned char rv;
@@ -91,68 +22,157 @@ unsigned char inportb (unsigned short _port)
     return rv;
 }
 
-/* We will use this to write to I/O ports to send bytes to devices. This
-*  will be used in the next tutorial for changing the textmode cursor
-*  position. Again, we use some inline assembly for the stuff that simply
-*  cannot be done in C */
 void outportb (unsigned short _port, unsigned char _data)
 {
     __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
 
-uint8_t keyboard_read_scanCode()
+
+
+
+ ///////////////////////////////////////////////////////////////
+
+/* Defines an IDT entry */
+struct idt_entry
 {
-	return inportb(0X60);
+    unsigned short base_lo;
+    unsigned short sel;        /* Our kernel segment goes here! */
+    unsigned char always0;     /* This will ALWAYS be set to 0! */
+    unsigned char flags;       /* Set using the above table! */
+    unsigned short base_hi;
+} __attribute__((packed));
+
+struct idt_ptr
+{
+    unsigned short limit;
+    unsigned int base;
+} __attribute__((packed));
+
+/* Declare an IDT of 256 entries. Although we will only use the
+*  first 32 entries in this tutorial, the rest exists as a bit
+*  of a trap. If any undefined IDT entry is hit, it normally
+*  will cause an "Unhandled Interrupt" exception. Any descriptor
+*  for which the 'presence' bit is cleared (0) will generate an
+*  "Unhandled Interrupt" exception */
+struct idt_entry idt[256];
+struct idt_ptr idtp;
+
+/* This exists in 'start.asm', and is used to load our IDT */
+extern void idt_load();
+
+void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags)
+{
+     /* The interrupt routine's base address */
+    idt[num].base_lo = (base & 0xFFFF);
+    idt[num].base_hi = (base >> 16) & 0xFFFF;
+
+    /* The segment or 'selector' that this IDT entry will use
+    *  is set here, along with any access flags */
+    idt[num].sel = sel;
+    idt[num].always0 = 0;
+    idt[num].flags = flags;
 }
 
-void terminal_setcolor(uint8_t color)
+void *memset(void *s, int c, size_t n)
 {
-	terminal_color = color;
+    unsigned char* p=s;
+    while(n--)
+        *p++ = (unsigned char)c;
+    return s;
 }
- 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
+
+/* Installs the IDT */
+void idt_install()
 {
-	const size_t index = y * VGA_WIDTH + x;
-	terminal_buffer[index] = make_vgaentry(c, color);
+    /* Sets the special IDT pointer up, just like in 'gdt.c' */
+    idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
+    idtp.base = &idt;
+
+    /* Clear out the entire IDT, initializing it to zeros */
+    memset(&idt, 0, sizeof(struct idt_entry) * 256);
+
+    /* Add any new ISRs to the IDT here using idt_set_gate */
+
+    /* Points the processor's internal register to the new IDT */
+    idt_load();
 }
- 
-void terminal_putchar(char c)
+
+/* These are function prototypes for all of the exception
+*  handlers: The first 32 entries in the IDT are reserved
+*  by Intel, and are designed to service exceptions! */
+extern void isr0();
+extern void isr1();
+
+
+/* This is a very repetitive function... it's not hard, it's
+*  just annoying. As you can see, we set the first 32 entries
+*  in the IDT to the first 32 ISRs. We can't use a for loop
+*  for this, because there is no way to get the function names
+*  that correspond to that given entry. We set the access
+*  flags to 0x8E. This means that the entry is present, is
+*  running in ring 0 (kernel level), and has the lower 5 bits
+*  set to the required '14', which is represented by 'E' in
+*  hex. */
+void isrs_install()
 {
-	if(c=='\n')
-	{
-		terminal_column=0;
-		if ( ++terminal_row == VGA_HEIGHT )
-		{
-			terminal_row = 0;
-		}
-		return;
-	}
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if ( ++terminal_column == VGA_WIDTH )
-	{
-		terminal_column = 0;
-		if ( ++terminal_row == VGA_HEIGHT )
-		{
-			terminal_row = 0;
-		}
-	}
+    idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
+    idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);
+
 }
- 
-void terminal_writestring(const char* data)
+
+/* This is a simple string array. It contains the message that
+*  corresponds to each and every exception. We get the correct
+*  message by accessing like:
+*  exception_message[interrupt_number] */
+unsigned char *exception_messages[] =
 {
-	size_t datalen = strlen(data);
-	for ( size_t i = 0; i < datalen; i++ )
-		terminal_putchar(data[i]);
+    "Division By Zero",
+    "Debug",
+};
+
+/* All of our Exception handling Interrupt Service Routines will
+*  point to this function. This will tell us what exception has
+*  happened! Right now, we simply halt the system by hitting an
+*  endless loop. All ISRs disable interrupts while they are being
+*  serviced as a 'locking' mechanism to prevent an IRQ from
+*  happening and messing up kernel data structures */
+
+ void fault_handler(struct regs *r)
+{
+    
+        terminal_writestring("Asa");
+       for (;;);
 }
+/////////////////////////////////////////////////////////////////
+
+
+
+
  
+
+
+
+void yourIrqHandler(struct Regs* r){ 
+  terminal_writestring("asas");
+} 
+  
+
+
+
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
 #endif
 void kernel_main()
 {
 	terminal_initialize();
+	idt_install();
+	isrs_install();
+	irq_install();
 
+
+    int yourIRQ = 1; 
+    irq_install_handler(0,yourIrqHandler);//vorsicht functions namen sind pointer 
 
 	while(true)
 	{
@@ -163,6 +183,8 @@ void kernel_main()
 			if(a==0x1e)
 			{
 				terminal_writestring("a\n");
+				size_t z=0;
+				size_t dddd=10/0;
 			}
 			else if(a==0x1f)
 			{
