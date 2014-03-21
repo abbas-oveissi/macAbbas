@@ -1,6 +1,5 @@
 
 
-
 /* This defines what the stack looks like after an ISR was running */
 struct regs
 {
@@ -22,3 +21,9 @@ extern void irq_handler(struct regs *r);
 extern unsigned char keyboard_read_scanCode();
 extern void terminal_writestring(const char* data);
 extern void terminal_initialize();
+
+
+extern void terminal_putchar(char c);
+
+
+extern void gdt_init(void);

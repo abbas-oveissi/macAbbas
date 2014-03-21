@@ -1,170 +1,56 @@
-# Declare constants used for creating a multiboot header.
-.set ALIGN,    1<<0             # align loaded modules on page boundaries
-.set MEMINFO,  1<<1             # provide memory map
-.set FLAGS,    ALIGN | MEMINFO  # this is the Multiboot 'flag' field
-.set MAGIC,    0x1BADB002       # 'magic number' lets bootloader find the header
-.set CHECKSUM, -(MAGIC + FLAGS) # checksum of above, to prove we are multiboot
+;###############################################################################
+;#  title: entry point of kernel
+;#  file:  entry.asm
+;#  Copyright (c) 2010,2011 Pooya Shahinfar (Pswin)
+;###############################################################################
 
-# Declare a header as in the Multiboot Standard. We put this into a special
-# section so we can force the header to be in the start of the final program.
-# You don't need to understand all these details as it is just magic values that
-# is documented in the multiboot standard. The bootloader will search for this
-# magic sequence and recognize us as a multiboot kernel.
-.section .multiboot
-.align 4
-.long MAGIC
-.long FLAGS
-.long CHECKSUM
-
-# Currently the stack pointer register (esp) points at anything and using it may
-# cause massive harm. Instead, we'll provide our own stack. We will allocate
-# room for a small temporary stack by creating a symbol at the bottom of it,
-# then allocating 16384 bytes for it, and finally creating a symbol at the top.
-.section .bootstrap_stack, "aw", @nobits
-stack_bottom:
-.skip 16384 # 16 KiB
-stack_top:
-
-# The linker script specifies _start as the entry point to the kernel and the
-# bootloader will jump to this position once the kernel has been loaded. It
-# doesn't make sense to return from this function as the bootloader is gone.
-.section .text
-.global _start
-.type _start, @function
-_start:
-	# Welcome to kernel mode! We now have sufficient code for the bootloader to
-	# load and run our operating system. It doesn't do anything interesting yet.
-	# Perhaps we would like to call printf("Hello, World\n"). You should now
-	# realize one of the profound truths about kernel mode: There is nothing
-	# there unless you provide it yourself. There is no printf function. There
-	# is no <stdio.h> header. If you want a function, you will have to code it
-	# yourself. And that is one of the best things about kernel development:
-	# you get to make the entire system yourself. You have absolute and complete
-	# power over the machine, there are no security restrictions, no safe
-	# guards, no debugging mechanisms, there is nothing but what you build.
-
-	# By now, you are perhaps tired of assembly language. You realize some
-	# things simply cannot be done in C, such as making the multiboot header in
-	# the right section and setting up the stack. However, you would like to
-	# write the operating system in a higher level language, such as C or C++.
-	# To that end, the next task is preparing the processor for execution of
-	# such code. C doesn't expect much at this point and we only need to set up
-	# a stack. Note that the processor is not fully initialized yet and stuff
-	# such as floating point instructions are not available yet.
-
-	# To set up a stack, we simply set the esp register to point to the top of
-	# our stack (as it grows downwards).
-	movl $stack_top, %esp
-
-	# We are now ready to actually execute C code. We cannot embed that in an
-	# assembly file, so we'll create a kernel.c file in a moment. In that file,
-	# we'll create a C entry point called kernel_main and call it here.
-	call kernel_main
-
-	# In case the function returns, we'll want to put the computer into an
-	# infinite loop. To do that, we use the clear interrupt ('cli') instruction
-	# to disable interrupts, the halt instruction ('hlt') to stop the CPU until
-	# the next interrupt arrives, and jumping to the halt instruction if it ever
-	# continues execution, just to be safe. We will create a local label rather
-	# than real symbol and jump to there endlessly.
-	cli
-	hlt
-.Lhang:
-	jmp .Lhang
+MBOOT_PAGE_ALIGN    equ 1<<0        ; Load kernel and modules on a page boundary
+MBOOT_MEM_INFO      equ 1<<1        ; Provide memory info for kernel
+MBOOT_AOUT_KLUDGE  equ 1 << 16      ; GRUB pass symbol table to kernel
+MBOOT_HEADER_MAGIC  equ 0x1BADB002  ; Multiboot Magic value
+MBOOT_HEADER_FLAGS  equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
+MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
 
+[BITS 32]                       ; All instructions should be 32-bit.
+
+[GLOBAL mboot]                  ; Make 'mboot' accessible from C.
+[EXTERN code]                   ; Start of the '.text' section.
+[EXTERN bss]                    ; Start of the .bss section.
+[EXTERN end]                    ; End of the last loadable section.
+[EXTERN g_sStack]
+
+%define STACK_SIZE (4 * 1024)
 
 
+section ._mbootsec
+align 4
+mboot:
+    dd  MBOOT_HEADER_MAGIC      ; GRUB will search for this value on each
+                                ; 4-byte boundary in your kernel file
+    dd  MBOOT_HEADER_FLAGS      ; How GRUB should load your file / settings
+    dd  MBOOT_CHECKSUM          ; To ensure that the above values are correct
+
+    dd  mboot                   ; Location of this descriptor
+    dd  code                    ; Start of kernel '.text' (code) section.
+    dd  bss                     ; End of kernel '.data' section.
+    dd  end                     ; End of kernel.
+    dd  start                   ; Kernel entry point (initial EIP).
 
 
+[GLOBAL start]      ; Kernel entry point.
+[EXTERN kernel_main]      ; This is the entry point of our C code
 
+section .text
+start:
+    ;mov [g_pMultiBootInfo],ebx  ; save multiboot structure in the g_pMultiBootInfo
+    
+    ; setuping new stack
+    mov ebp, g_sStack
+    mov esp, g_sStack + STACK_SIZE
+    
+    ; Execute the kernel:
+    cli         ; Disable interrupts.
+    call kernel_main  ; call our main() function.
+    hlt         ; halt system
 
-.global isr0
-.global isr1
-.global irq1
-
-#  0: Divide By Zero Exception
-isr0:
-    cli
-    push  $0   
-    push  $0
-    jmp isr_common_stub
-
-#  1: Debug Exception
-isr1:
-    cli
-    push  $0
-    push  $1
-    jmp isr_common_stub
-   
-irq1:
-    cli
-    push  $0  
-    push  $32
-    jmp irq_common_stub
-
-
-
-.extern fault_handler
-
-isr_common_stub:
-    pusha
-    pushw %ds
-    pushw %es
-    pushw %fs
-    pushw %gs
-    movw $0x10 ,%ax
-    movw %ax ,%ds
-    movw %ax ,%es
-    movw %ax ,%fs
-    movw %ax ,%gs
-    movl  %esp  ,%eax
-    pushl %eax
-    movl %eax, fault_handler
-    call %eax       
-    popl %eax
-    popw %gs
-    popw %fs
-    popw %es
-    popw %ds
-    popa
-    add $8,%esp     
-    iret           
-
-
-.extern irq_handler
-
-irq_common_stub:
-    pusha
-    pushw %ds
-    pushw %es
-    pushw %fs
-    pushw %gs
-    movw $0x10 ,%ax
-    movw %ax ,%ds
-    movw %ax ,%es
-    movw %ax ,%fs
-    movw %ax ,%gs
-    movl  %esp  ,%eax
-    pushl %eax
-    movl %eax, irq_handler
-    call %eax       
-    popl %eax
-    popw %gs
-    popw %fs
-    popw %es
-    popw %ds
-    popa
-    add $8,%esp 
-    iret
-
-
-.global idt_load
-.extern idtp
-idt_load:
-    lidt (idtp)
-    ret
-
-# Set the size of the _start symbol to the current location '.' minus its start.
-# This is useful when debugging or when you implement call tracing.
-.size _start, . - _start
