@@ -26,7 +26,6 @@ void register_isr( uint8_t n, isr_t handler )
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
 {
-    terminal_writestring("isr_handler\n");
     if (interrupt_handlers[regs.int_no] != 0)
     {
         isr_t handler = interrupt_handlers[regs.int_no];
@@ -34,28 +33,38 @@ void isr_handler(registers_t regs)
     }
     else
     {
-        terminal_writestring("Recieved interrupt: 1");
+        terminal_writestring("Recieved interrupt: ");
+        terminal_writestring(ptrToStr(regs.int_no,10));
+        terminal_writestring("\n");
+
     }
 }
 
 // This gets called from our ASM interrupt handler stub.
 void irq_handler(registers_t regs)
 {   
-    terminal_writestring("irq_handler\n");
     // sending EOI (end of interrup) command to the pic
-    pic_interrupt_done(regs.int_no);
+    if ( regs.int_no >= 40 )
+    {
+        outportb(0xA0, 0x20);
+    }
+    outportb(0x20, 0x20);
     
     // call cusomized handler if found
     if (interrupt_handlers[regs.int_no] != 0)
     {
-  terminal_writestring("asas");
-        
         isr_t handler = interrupt_handlers[regs.int_no];
         handler(regs);
     }
     else
     {
-        terminal_writestring("Recieved IRQ: 1");
+        if(regs.int_no!=32)
+        {
+            terminal_writestring("Recieved IRQ: ");
+            terminal_writestring(ptrToStr(regs.int_no,10));
+            terminal_writestring("\n");
+        }
+
     }
 
 
@@ -157,19 +166,6 @@ void pic_init( )
     idt_set_ir( SLAVE_PIC_BASE + 7,  flags, 0x08 , (uint32_t)irq15 );
     
 }
-
-// pic_interrupt_done
-void pic_interrupt_done(u32_t int_no)
-{
-    if ( int_no >= SLAVE_PIC_BASE )
-    {
-        // Send reset signal to slave.
-        outportb( PIC2_REG_COMMAND, 0x20 );
-    }
-    // Send reset signal to master. (As well as slave, if necessary).
-    outportb( PIC1_REG_COMMAND, 0x20 );
-}
-
 
 
 /* These are own ISRs that point to our special IRQ handler

@@ -123,7 +123,7 @@ void terminal_writestring(const char* data)
 
 
 char bchars[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-char * ptrToString(unsigned int ptr,int base)
+char * ptrToStr(unsigned int ptr,int base)
 {
 	char buff[33],temp[33];
 	int i=31;

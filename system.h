@@ -18,8 +18,6 @@ typedef struct registers
 
 typedef void (*isr_t)(registers_t);
        
-extern void pic_interrupt_done(u32_t int_no);
-
 extern unsigned char inportb (unsigned short _port);
 extern void outportb (unsigned short _port, unsigned char _data);
 
@@ -35,9 +33,11 @@ extern void terminal_initialize();
 
 extern void gdt_init(void);
 extern void idt_init(void);
-extern void pic_init( void );
+extern void pic_init(void);
 
 
 
-extern char* ptrToString(unsigned int ptr,int base);
+extern char* ptrToStr(unsigned int ptr,int base);
 extern void terminal_putchar(char c);
+
+extern void register_isr( unsigned char n, isr_t handler );
