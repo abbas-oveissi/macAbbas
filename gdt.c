@@ -2,11 +2,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define GDT_DESCRIPTORS_NO ( 3 )
+
+
+
 //================================
 // structs
 //================================
-
 struct gdt_ptr
 {
     uint16_t limit;
@@ -56,7 +57,7 @@ void gdt_set_gate(uint32_t  desc_index, uint32_t  base_address, uint32_t  limit,
 void gdt_init()
 {
     gp.limit = (sizeof(struct gdt_entry) * GDT_DESCRIPTORS_NO) - 1;
-    gp.base = (uint32_t)&gdt[0];
+    gp.base = (uint32_t)&gdt;
     gdt_set_gate(0, 0, 0, 0, 0);
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);

@@ -120,3 +120,31 @@ void terminal_writestring(const char* data)
 	for ( size_t i = 0; i < datalen; i++ )
 		terminal_putchar(data[i]);
 }
+
+
+char bchars[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+char * ptrToString(unsigned int ptr,int base)
+{
+	char buff[33],temp[33];
+	int i=31;
+	buff[32]='\0';
+	while(ptr!=0)
+	{
+		char ch=bchars[ptr%base];
+		ptr=ptr/base;
+		buff[i]=ch;
+		i=i-1;
+	}
+	i++;
+	for(int j=0;;++i,j++)
+	{
+		if(buff[i]=='\0')
+		{
+			temp[j]='\0';
+			break;
+		}
+		temp[j]=buff[i];
+	}
+	return (char *)temp;
+}
+

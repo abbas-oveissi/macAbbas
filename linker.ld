@@ -1,34 +1,30 @@
-ENTRY(start)
+ENTRY(_start)
+
 SECTIONS
 {
-	/* multiboot section must be in fisrt 8k of binary */
-	._mbootsec 0x100000:
-	{
-		*(._mbootsec);
-        . = ALIGN(4096);	
-	}
+    . = 1M;
 
-    .text  :
+    .text BLOCK(4K) : ALIGN(4K)
     {
-        code = .; _code = .; __code = .;
+        *(.multiboot)
         *(.text)
-        . = ALIGN(4096);
     }
 
-    .data :
+    .rodata BLOCK(4K) : ALIGN(4K)
     {
-        data = .; _data = .; __data = .;
-        *(.data)
         *(.rodata)
-        . = ALIGN(4096);
     }
 
-    .bss :
+    .data BLOCK(4K) : ALIGN(4K)
     {
-        bss = .; _bss = .; __bss = .;
-        *(.bss)
-        . = ALIGN(4096);
+        *(.data)
     }
 
-    end = .; _end = .; __end = .;
+    .bss BLOCK(4K) : ALIGN(4K)
+    {
+        *(COMMON)
+        *(.bss)
+        *(.bootstrap_stack)
+    }
+
 }

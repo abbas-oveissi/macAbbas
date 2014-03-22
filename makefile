@@ -1,5 +1,5 @@
-myOs : boot.o kernel.o irq.o vga.o gdt.o idt.o linker.ld  grub.cfg
-	i586-elf-gcc -T linker.ld -o ../output/myos.bin -ffreestanding -O2 -nostdlib ../output/boot.o ../output/kernel.o ../output/irq.o ../output/vga.o ../output/gdt.o ../output/gdt_s.o ../output/idt.o ../output/idt_s.o -lgcc
+myOs : boot.o kernel.o irq.o vga.o gdt.o idt.o common.o linker.ld  grub.cfg
+	i586-elf-gcc -T linker.ld -o ../output/myos.bin -ffreestanding -O2 -nostdlib ../output/boot.o ../output/kernel.o ../output/irq.o ../output/vga.o ../output/gdt.o ../output/gdt_s.o ../output/idt.o ../output/idt_s.o ../output/common.o -lgcc
 	mkdir -p ../output/isodir
 	mkdir -p ../output/isodir/boot
 	cp ../output/myos.bin ../output/isodir/boot/myos.bin
@@ -34,3 +34,6 @@ gdt.o : gdt.c gdt_s.s
 idt.o : idt.c idt_s.s
 	i586-elf-gcc -c idt.c -o  ../output/idt.o -ffreestanding -std=gnu99
 	nasm idt_s.s -f elf -o ../output/idt_s.o
+
+common.o :
+	i586-elf-gcc -c common.c -o  ../output/common.o -ffreestanding -std=gnu99

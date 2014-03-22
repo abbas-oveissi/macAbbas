@@ -26,11 +26,9 @@ void register_isr( uint8_t n, isr_t handler )
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t regs)
 {
-
+    terminal_writestring("isr_handler\n");
     if (interrupt_handlers[regs.int_no] != 0)
     {
-  terminal_writestring("asas");
-
         isr_t handler = interrupt_handlers[regs.int_no];
         handler(regs);
     }
@@ -43,7 +41,7 @@ void isr_handler(registers_t regs)
 // This gets called from our ASM interrupt handler stub.
 void irq_handler(registers_t regs)
 {   
-
+    terminal_writestring("irq_handler\n");
     // sending EOI (end of interrup) command to the pic
     pic_interrupt_done(regs.int_no);
     
@@ -101,46 +99,42 @@ extern void irq15();
  
 
 
-void outb (unsigned short _port, unsigned char _data)
-{
-     __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
-}
 
 
 
 // pic_init
-void pic_init( void )
+void pic_init( )
 {
     // sending icw1 to pic1
-    outb( PIC1_REG_COMMAND,0x11 );  
+    outportb( PIC1_REG_COMMAND,0x11 );  
 
     // mapping irq 0..7 to iterrupt no master_base
-    outb( PIC1_REG_DATA,MASTER_PIC_BASE );
+    outportb( PIC1_REG_DATA,MASTER_PIC_BASE );
 
     // sending icw3
-    outb( PIC1_REG_DATA,0x4 ); // 0x4 = 0100 secound bit ( IR line 2)
+    outportb( PIC1_REG_DATA,0x4 ); // 0x4 = 0100 secound bit ( IR line 2)
 
     // sending icw4
-    outb( PIC1_REG_DATA,0x1 ); // controller automically perform EOI ( end of interrupt)
+    outportb( PIC1_REG_DATA,0x1 ); // controller automically perform EOI ( end of interrupt)
 
     // All done, null out data register
-    outb( PIC1_REG_DATA,0x00 );
+    outportb( PIC1_REG_DATA,0x00 );
     
     
     // sending icw1 to pic2
-    outb( PIC2_REG_COMMAND,0x11 ); 
+    outportb( PIC2_REG_COMMAND,0x11 ); 
 
     // mapping irq 8..15 to interrupt no slave_base
-    outb( PIC2_REG_DATA,SLAVE_PIC_BASE );
+    outportb( PIC2_REG_DATA,SLAVE_PIC_BASE );
 
     // sending icw3
-    outb( PIC2_REG_DATA,0x02 ); // 0x2 = 010 ir lien 2
+    outportb( PIC2_REG_DATA,0x02 ); // 0x2 = 010 ir lien 2
 
     // sending icw4
-    outb( PIC2_REG_DATA,0x01 );
+    outportb( PIC2_REG_DATA,0x01 );
     
     // All done, null out data register
-    outb( PIC2_REG_DATA,0x00 );
+    outportb( PIC2_REG_DATA,0x00 );
     
     uint8_t flags = IDT_DESC_PRESENT | IDT_DESC_RING0 | IDT_DESC_BIT32;
 
@@ -170,10 +164,10 @@ void pic_interrupt_done(u32_t int_no)
     if ( int_no >= SLAVE_PIC_BASE )
     {
         // Send reset signal to slave.
-        outb( PIC2_REG_COMMAND, 0x20 );
+        outportb( PIC2_REG_COMMAND, 0x20 );
     }
     // Send reset signal to master. (As well as slave, if necessary).
-    outb( PIC1_REG_COMMAND, 0x20 );
+    outportb( PIC1_REG_COMMAND, 0x20 );
 }
 
 
