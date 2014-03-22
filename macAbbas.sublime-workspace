@@ -1,0 +1,400 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"uint",
+				"uint32_t"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "boot.s",
+			"settings":
+			{
+				"buffer_size": 2161,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "makefile",
+			"settings":
+			{
+				"buffer_size": 1199,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "gdt.c",
+			"settings":
+			{
+				"buffer_size": 1756,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "idt.c",
+			"settings":
+			{
+				"buffer_size": 4787,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "typedef unsigned int u32_t;\n\n#define MAX_INTERRUPTS ( 256 )\ntypedef struct registers\n{\n   	u32_t ds;	// Data segment selector\n   	u32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;	// Pushed by pusha.\n   	u32_t int_no, err_code;	// Interrupt number and error code (if applicable)\n   	u32_t eip, cs, eflags, useresp, ss;	// Pushed by the processor automatically.\n} registers_t;\ntypedef void (*isr_t)(registers_t);\n#define SYS_CALL_INTERRUPT ( 80 )\n       \n\nextern void pic_init( void );\n\n//! extrnal interrupt done\nextern void pic_interrupt_done(u32_t int_no);\n\n\nextern void irq_install_handler(int irq, void (*handler)(registers_t *r));\nextern void irq_uninstall_handler(int irq);\nextern void irq_remap(void);\nextern void irq_install();\n//extern void irq_handler(registers_t *r);\n \n\nextern unsigned char keyboard_read_scanCode();\nextern void terminal_writestring(const char* data);\nextern void terminal_initialize();\n\n\nextern void terminal_putchar(char c);\n\n\nextern void gdt_init(void);",
+			"file": "system.h",
+			"file_size": 1003,
+			"file_write_time": 1395442640000000,
+			"settings":
+			{
+				"buffer_size": 981,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "irq.c",
+			"settings":
+			{
+				"buffer_size": 7439,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "kernel.c",
+			"settings":
+			{
+				"buffer_size": 8490,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 75.0,
+		"selected_items":
+		[
+			[
+				"git cus",
+				"Git: Custom Command"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/abbas/Desktop/macAbbas/idt.c"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"addr_t",
+			"CODE_SELECTOR_R0",
+			"isr0",
+			"idt_ptr",
+			"gdt",
+			"gdt_s",
+			"gdt"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "boot.s",
+					"settings":
+					{
+						"buffer_size": 2161,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R/R.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "makefile",
+					"settings":
+					{
+						"buffer_size": 1199,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								260,
+								260
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": 708.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "gdt.c",
+					"settings":
+					{
+						"buffer_size": 1756,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								39,
+								39
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "idt.c",
+					"settings":
+					{
+						"buffer_size": 4787,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2303,
+								2303
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1980.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "system.h",
+					"settings":
+					{
+						"buffer_size": 981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								451,
+								451
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "irq.c",
+					"settings":
+					{
+						"buffer_size": 7439,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1286,
+								1286
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 233.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "kernel.c",
+					"settings":
+					{
+						"buffer_size": 8490,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7630,
+								7630
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3690.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 193.0,
+	"status_bar_visible": true
+}

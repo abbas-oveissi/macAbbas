@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define GDT_DESCRIPTORS_NO 3
+#define GDT_DESCRIPTORS_NO ( 3 )
 //================================
 // structs
 //================================

@@ -32,13 +32,8 @@ void outportb (unsigned short _port, unsigned char _data)
 }
 
 
-void enable_interrupts ()
-{
-__asm__ ("sti");//Enables the interrupts , set the interrupt flag
-}
 
-
- ///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 void *memset(void *s, int c, size_t n)
 {
     unsigned char* p=s;
@@ -241,21 +236,16 @@ void fault_handler(struct regs *r)
         for (;;);
     }
 }
-/////////////////////////////////////////////////////////////////*/
+////////////////////////////////////////////////////////////////*/
 
+extern void change_abbas();
 
-
-
- 
-
-
-
-void yourIrqHandler(struct Regs* r){ 
+void yourIrqHandler(registers_t regs)
+{
   terminal_writestring("asas");
-} 
-  
- uint8_t abbas=97;
- extern void change_abbas();
+
+}
+
 
 
 #if defined(__cplusplus)
@@ -263,11 +253,15 @@ extern "C" /* Use C linkage for kernel_main. */
 #endif
 void kernel_main()
 {
-	terminal_initialize();
+	//terminal_initialize();
 	//terminal_putchar(abbas);
 	//change_abbas();
     //enable_interrupts();
-    gdt_init();
+    terminal_writestring("a\n");
+    //gdt_init();
+    //idt_init(0x08);
+   // pic_init();
+    terminal_writestring("a\n");
 	//idt_install();
 	//isrs_install();
 	//irq_install();
