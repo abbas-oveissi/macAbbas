@@ -23,3 +23,31 @@ void *memset(void *s, int c, size_t n)
         *p++ = (unsigned char)c;
     return s;
 }
+
+
+char b[] = {'0','1','2','3','4','5','6','7','8','9'};
+char * intToStr(unsigned int ptr)
+{
+	char buff[33],temp[33];
+	int i=31;
+	buff[32]='\0';
+	while(ptr!=0)
+	{
+		char ch=b[ptr%10];
+		ptr=ptr/10;
+		buff[i]=ch;
+		i=i-1;
+	}
+	i++;
+	for(int j=0;;++i,j++)
+	{
+		if(buff[i]=='\0')
+		{
+			temp[j]='\0';
+			break;
+		}
+		temp[j]=buff[i];
+	}
+	return (char *)temp;
+}
+

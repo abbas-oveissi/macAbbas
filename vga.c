@@ -30,6 +30,7 @@ enum vga_color
  
 
 
+
 uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
 	return fg | bg << 4;
@@ -62,7 +63,7 @@ void terminal_initialize()
 {
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = make_color(COLOR_LIGHT_GREY, COLOR_BLACK);
+	terminal_color = make_color(COLOR_WHITE, COLOR_BLUE);
 	terminal_buffer = (uint16_t*) 0xB8000;
 	for ( size_t y = 0; y < VGA_HEIGHT; y++ )
 	{
@@ -120,7 +121,6 @@ void terminal_writestring(const char* data)
 	for ( size_t i = 0; i < datalen; i++ )
 		terminal_putchar(data[i]);
 }
-
 
 char bchars[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 char * ptrToStr(unsigned int ptr,int base)

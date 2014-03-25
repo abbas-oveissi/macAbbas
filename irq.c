@@ -110,6 +110,168 @@ extern void irq15();
 
 
 
+char * scanCodeKeyboard[128] = {
+    "Err",
+    "Esc",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "0",
+    "_",
+    "=",
+    "BackSpace",
+    "Tab",
+    "q",
+    "w",
+    "e",
+    "r",
+    "t",
+    "y",
+    "u",
+    "i",
+    "o",
+    "p",
+    "[",
+    "]",
+    "Enter",
+    "L ctr",
+    "a",
+    "s",
+    "d",
+    "f",
+    "g",
+    "h",
+    "j",
+    "k",
+    "l",
+    ";",
+    "\'",
+    "~",
+    "L shift",
+    "\\",
+    "z", 
+    "x",
+    "c",
+    "v",
+    "b",
+    "n",
+    "m",
+    ",",
+    ".",
+    "/",
+    "#",
+    "#",
+    "#",
+    " " // R shift - bikhi - L alt
+};
+char * shifScanCodeKeyboard[128] = {
+    "Err",
+    "Esc",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "0",
+    "_",
+    "=",
+    "BackSpace",
+    "Tab",
+    "q",
+    "w",
+    "e",
+    "r",
+    "t",
+    "y",
+    "u",
+    "i",
+    "o",
+    "p",
+    "[",
+    "]",
+    "Enter",
+    "L ctr",
+    "A",
+    "S",
+    "D",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "L",
+    ";",
+    "\'",
+    "~",
+    "L shift",
+    "\\",
+    "z", 
+    "x",
+    "c",
+    "v",
+    "b",
+    "n",
+    "m",
+    ",",
+    ".",
+    "/",
+    "#",
+    "#",
+    "#",
+    " " // R shift - bikhi - L alt
+};
+
+int shift=0;
+
+void keyboard_handler(registers_t regs)
+{
+    uint8_t status= inportb(0x64);
+    if(status&0x1==1)
+    {
+        uint8_t a= keyboard_read_scanCode();
+        //terminal_writestring(ptrToStr(a,16));
+        //terminal_writestring("\n");
+        if(a==0x2A)
+        {
+            shift=1;
+            return;
+        }
+        else if(a==0xAA)
+        {
+            shift=0;
+            return;
+
+        }
+
+
+        if(a<128&&shift==0)
+        {
+            terminal_writestring(intToStr(shift));
+            terminal_writestring(scanCodeKeyboard[a]);
+            return;
+        }
+        if(a<128&&shift==1)
+        {
+            terminal_writestring(intToStr(shift));
+            terminal_writestring(shifScanCodeKeyboard[a]);
+            return;
+        }
+         //terminal_writestring("------\n");
+
+        // terminal_writestring("------\n");
+
+    }
+}
 
 // pic_init
 void pic_init( )
@@ -164,6 +326,8 @@ void pic_init( )
     idt_set_ir( SLAVE_PIC_BASE + 5,  flags, 0x08 , (uint32_t)irq13 );
     idt_set_ir( SLAVE_PIC_BASE + 6,  flags, 0x08 , (uint32_t)irq14 );
     idt_set_ir( SLAVE_PIC_BASE + 7,  flags, 0x08 , (uint32_t)irq15 );
+    
+    register_isr(33,keyboard_handler);
     
 }
 

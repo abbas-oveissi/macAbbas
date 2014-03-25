@@ -38,6 +38,7 @@ extern void pic_init(void);
 
 
 extern char* ptrToStr(unsigned int ptr,int base);
+extern char * intToStr(unsigned int ptr);
 extern void terminal_putchar(char c);
 
 extern void register_isr( unsigned char n, isr_t handler );

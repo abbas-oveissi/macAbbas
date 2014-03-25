@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"term",
+				"terminal_putchar"
+			],
+			[
+				"ret",
+				"return"
+			],
+			[
+				"pr",
+				"ptr"
+			],
+			[
+				"uin",
+				"uint8_t"
+			],
+			[
+				"u",
+				"uint16_t"
+			],
+			[
 				"uint",
 				"uint32_t"
 			]
@@ -12,53 +32,18 @@
 	"buffers":
 	[
 		{
-			"file": "boot.s",
-			"settings":
-			{
-				"buffer_size": 2161,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "makefile",
-			"settings":
-			{
-				"buffer_size": 1199,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "gdt.c",
 			"settings":
 			{
-				"buffer_size": 1756,
+				"buffer_size": 1722,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "idt.c",
+			"file": "vga.c",
 			"settings":
 			{
-				"buffer_size": 4787,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "typedef unsigned int u32_t;\n\n#define MAX_INTERRUPTS ( 256 )\ntypedef struct registers\n{\n   	u32_t ds;	// Data segment selector\n   	u32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;	// Pushed by pusha.\n   	u32_t int_no, err_code;	// Interrupt number and error code (if applicable)\n   	u32_t eip, cs, eflags, useresp, ss;	// Pushed by the processor automatically.\n} registers_t;\ntypedef void (*isr_t)(registers_t);\n#define SYS_CALL_INTERRUPT ( 80 )\n       \n\nextern void pic_init( void );\n\n//! extrnal interrupt done\nextern void pic_interrupt_done(u32_t int_no);\n\n\nextern void irq_install_handler(int irq, void (*handler)(registers_t *r));\nextern void irq_uninstall_handler(int irq);\nextern void irq_remap(void);\nextern void irq_install();\n//extern void irq_handler(registers_t *r);\n \n\nextern unsigned char keyboard_read_scanCode();\nextern void terminal_writestring(const char* data);\nextern void terminal_initialize();\n\n\nextern void terminal_putchar(char c);\n\n\nextern void gdt_init(void);",
-			"file": "system.h",
-			"file_size": 1003,
-			"file_write_time": 1395442640000000,
-			"settings":
-			{
-				"buffer_size": 981,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "irq.c",
-			"settings":
-			{
-				"buffer_size": 7439,
+				"buffer_size": 2632,
 				"line_ending": "Unix"
 			}
 		},
@@ -66,7 +51,23 @@
 			"file": "kernel.c",
 			"settings":
 			{
-				"buffer_size": 8490,
+				"buffer_size": 2833,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "common.c",
+			"settings":
+			{
+				"buffer_size": 842,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "system.h",
+			"settings":
+			{
+				"buffer_size": 1199,
 				"line_ending": "Unix"
 			}
 		}
@@ -74,9 +75,37 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 75.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"stat",
+				"Git: Status"
+			],
+			[
+				"git statu",
+				"Git: Status"
+			],
+			[
+				"status",
+				"Git: Status"
+			],
+			[
+				"pus",
+				"Git: Push Current Branch"
+			],
+			[
+				"push",
+				"Git: Push Current Branch"
+			],
+			[
+				"custom",
+				"Git: Custom Command"
+			],
+			[
+				"git co",
+				"Git: Commit"
+			],
 			[
 				"git cus",
 				"Git: Custom Command"
@@ -99,7 +128,17 @@
 	},
 	"file_history":
 	[
-		"/home/abbas/Desktop/macAbbas/idt.c"
+		"/home/abbas/Desktop/macAbbas/kernel.c",
+		"/home/abbas/Desktop/macAbbas/vga.c",
+		"/home/abbas/Desktop/macAbbas/system.h",
+		"/home/abbas/Desktop/macAbbas/idt.c",
+		"/home/abbas/Desktop/macAbbas/irq.c",
+		"/home/abbas/Desktop/macAbbas/gdt.c",
+		"/home/abbas/Desktop/macAbbas/linker.ld",
+		"/home/abbas/Desktop/macAbbas/common.c",
+		"/home/abbas/Desktop/macAbbas/idt.h",
+		"/home/abbas/Desktop/macAbbas/boot.s",
+		"/home/abbas/Desktop/macAbbas/makefile"
 	],
 	"find":
 	{
@@ -117,6 +156,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"'",
+			"bchars",
+			"base",
+			"' '",
+			" '",
+			" ",
+			"outb",
+			"_codeSel",
 			"addr_t",
 			"CODE_SELECTOR_R0",
 			"isr0",
@@ -141,15 +188,15 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "boot.s",
+					"file": "gdt.c",
 					"settings":
 					{
-						"buffer_size": 2161,
+						"buffer_size": 1722,
 						"regions":
 						{
 						},
@@ -162,56 +209,57 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/R/R.tmLanguage",
+							"syntax": "Packages/C++/C.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 45.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "makefile",
+					"file": "vga.c",
 					"settings":
 					{
-						"buffer_size": 1199,
+						"buffer_size": 2632,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								260,
-								260
+								1542,
+								1542
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+							"syntax": "Packages/C++/C.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 708.0,
-						"translation.y": 0.0,
+						"translation.x": 0.0,
+						"translation.y": 1605.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "gdt.c",
+					"file": "kernel.c",
 					"settings":
 					{
-						"buffer_size": 1756,
+						"buffer_size": 2833,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								39,
-								39
+								138,
+								138
 							]
 						],
 						"settings":
@@ -221,35 +269,33 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 630.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "idt.c",
+					"file": "common.c",
 					"settings":
 					{
-						"buffer_size": 4787,
+						"buffer_size": 842,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2303,
-								2303
+								628,
+								628
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/C++/C.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1980.0,
+						"translation.y": 405.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -259,15 +305,15 @@
 					"file": "system.h",
 					"settings":
 					{
-						"buffer_size": 981,
+						"buffer_size": 1199,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								451,
-								451
+								1199,
+								1199
 							]
 						],
 						"settings":
@@ -275,63 +321,7 @@
 							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "irq.c",
-					"settings":
-					{
-						"buffer_size": 7439,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1286,
-								1286
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 233.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "kernel.c",
-					"settings":
-					{
-						"buffer_size": 8490,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7630,
-								7630
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3690.0,
+						"translation.y": 545.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -345,7 +335,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -370,6 +360,14 @@
 		]
 	},
 	"menu_visible": true,
+	"output.git-commit":
+	{
+		"height": 100.0
+	},
+	"output.git-push":
+	{
+		"height": 100.0
+	},
 	"replace":
 	{
 		"height": 0.0
@@ -380,16 +378,28 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"sys",
+				"system.h"
+			],
+			[
+				"irq",
+				"irq.c"
+			]
 		],
 		"width": 0.0
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"/home/abbas/Desktop/macAbbas/macAbbas.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"show_minimap": true,
 	"show_open_files": false,
