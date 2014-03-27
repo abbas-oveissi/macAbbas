@@ -52,13 +52,22 @@ size_t strlen(const char* str)
 }
  
 static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 24;
+static const size_t VGA_HEIGHT = 25;
  
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
  
+
+
+void writeForVGA(uint8_t index,uint8_t value)
+{
+    outportb(0x3D4,index);
+    outportb(0x3D5,value);
+}
+
+
 void terminal_initialize()
 {
 	terminal_row = 0;
@@ -73,6 +82,8 @@ void terminal_initialize()
 			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
 		}
 	}
+
+
 }
  
 
@@ -93,6 +104,24 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = make_vgaentry(c, color);
 }
  
+void backSpaceKey()
+{
+	if ( --terminal_column == -1 )
+	{
+		terminal_row--;
+		terminal_column = VGA_WIDTH-1;
+		if ( terminal_row == -1 )
+		{
+			terminal_row = 0;
+		}
+	}
+	terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+	
+	size_t cursorLocation = terminal_row* VGA_WIDTH + terminal_column;
+    writeForVGA(0x0E,cursorLocation >> 8);
+    writeForVGA(0x0F,cursorLocation);
+}
+
 void terminal_putchar(char c)
 {
 	if(c=='\n')
@@ -100,8 +129,13 @@ void terminal_putchar(char c)
 		terminal_column=0;
 		if ( ++terminal_row == VGA_HEIGHT )
 		{
-			terminal_row = 0;
+			terminal_row--;
+			scroll_down();
+			//terminal_row = 0;
 		}
+		size_t cursorLocation = terminal_row* VGA_WIDTH + terminal_column;
+    	writeForVGA(0x0E,cursorLocation >> 8);
+    	writeForVGA(0x0F,cursorLocation);
 		return;
 	}
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
@@ -110,11 +144,36 @@ void terminal_putchar(char c)
 		terminal_column = 0;
 		if ( ++terminal_row == VGA_HEIGHT )
 		{
-			terminal_row = 0;
+			terminal_row--;
+			scroll_down();
+			//terminal_row = 0;
 		}
 	}
+	size_t cursorLocation = terminal_row* VGA_WIDTH + terminal_column;
+    writeForVGA(0x0E,cursorLocation >> 8);
+    writeForVGA(0x0F,cursorLocation);
 }
  
+void scroll_down()
+{
+	for(int i=1;i<VGA_HEIGHT;i++)
+	{
+		for(int j=0;j<VGA_WIDTH;j++)
+		{
+			size_t oldLocation = i* VGA_WIDTH + j;
+			size_t newLocation = (i-1)* VGA_WIDTH + j;
+			terminal_buffer[newLocation] =terminal_buffer[oldLocation];
+		}
+	}
+
+	for(int j=0;j<VGA_WIDTH;j++)
+	{
+		size_t index = terminal_row* VGA_WIDTH + j;
+		terminal_buffer[index]=make_vgaentry(' ', terminal_color);
+	}
+
+}
+
 void terminal_writestring(const char* data)
 {
 	size_t datalen = strlen(data);
