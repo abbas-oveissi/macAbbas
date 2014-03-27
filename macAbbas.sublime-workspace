@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"terminal_",
+				"terminal_buffer"
+			],
+			[
+				"vga",
+				"VGA_WIDTH"
+			],
+			[
+				"termi",
+				"terminal_column"
+			],
+			[
 				"term",
 				"terminal_putchar"
 			],
@@ -32,58 +44,64 @@
 	"buffers":
 	[
 		{
-			"file": "gdt.c",
-			"settings":
-			{
-				"buffer_size": 1722,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "vga.c",
-			"settings":
-			{
-				"buffer_size": 2632,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "kernel.c",
 			"settings":
 			{
-				"buffer_size": 2833,
+				"buffer_size": 432,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "common.c",
+			"contents": "Remote:   origin @ git@github.com:abbas-oveissi/macAbbas.git\nLocal:    master ~/Desktop/macAbbas\nHead:     1bce59b code haye ezafii ro tamiz kardam\n\n\nChanges:\n	Modified   irq.c\n	Modified   macAbbas.sublime-workspace\n	Modified   system.h\n	Modified   vga.c\n\n\n# Movement:\n#    r = refresh status\n#    1-5 = jump to section\n#    n = next item, N = next section\n#    p = previous item, P = previous section\n#\n# Staging:\n#    s = stage file/section, S = stage all unstaged files\n#    ctrl+shift+s = stage all unstaged and untracked files\n#    u = unstage file/section, U = unstage all files\n#    backspace = discard file/section, shift+backspace = discard everything\n#\n# Commit:\n#    c = commit, C = commit -a (add unstaged)\n#    ctrl+shift+c = commit --amend (amend previous commit)\n#\n# Other:\n#    i = ignore file, I = ignore pattern\n#    enter = open file\n#    d = view diff\n#\n# Stashes:\n#    a = apply stash, A = pop stash\n#    z = create stash, Z = create stash including untracked files\n#    backspace = discard stash",
 			"settings":
 			{
-				"buffer_size": 842,
-				"line_ending": "Unix"
+				"buffer_size": 1017,
+				"line_ending": "Unix",
+				"name": "*git-status*: macAbbas",
+				"read_only": true,
+				"scratch": true
 			}
 		},
 		{
-			"file": "system.h",
+			"contents": "diff --git a/irq.c b/irq.c\nindex 86226aa..abdde56 100644\n--- a/irq.c\n+++ b/irq.c\n@@ -232,6 +232,9 @@ char * shifScanCodeKeyboard[128] = {\n };\n \n int shift=0;\n+extern void backSpaceKey();\n+\n+\n \n void keyboard_handler(registers_t regs)\n {\n@@ -253,7 +256,16 @@ void keyboard_handler(registers_t regs)\n \n         }\n \n-\n+        if(a==28)\n+        {\n+            terminal_writestring(\"\\n\");\n+            return;\n+        }\n+        //if(a==14)\n+        //{\n+        //    //backSpaceKey();\n+        //    return;\n+        //}\n         if(a<128&&shift==0)\n         {\n             terminal_writestring(intToStr(shift));\n",
 			"settings":
 			{
-				"buffer_size": 1199,
-				"line_ending": "Unix"
+				"buffer_size": 613,
+				"line_ending": "Unix",
+				"name": "*git-diff*: irq.c",
+				"read_only": true,
+				"scratch": true
 			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 96.0,
 		"selected_items":
 		[
 			[
-				"stat",
+				"git statu",
 				"Git: Status"
 			],
 			[
-				"git statu",
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"git sta",
+				"Git: Stash"
+			],
+			[
+				"psuh",
+				"Git: Push Current Branch"
+			],
+			[
+				"sta",
+				"Git: Status"
+			],
+			[
+				"stat",
 				"Git: Status"
 			],
 			[
@@ -115,7 +133,7 @@
 	},
 	"console":
 	{
-		"height": 0.0
+		"height": 125.0
 	},
 	"distraction_free":
 	{
@@ -128,17 +146,17 @@
 	},
 	"file_history":
 	[
+		"/home/abbas/Desktop/macAbbas/makefile",
+		"/home/abbas/Desktop/macAbbas/irq.c",
+		"/home/abbas/Desktop/macAbbas/system.h",
+		"/home/abbas/Desktop/macAbbas/common.c",
 		"/home/abbas/Desktop/macAbbas/kernel.c",
 		"/home/abbas/Desktop/macAbbas/vga.c",
-		"/home/abbas/Desktop/macAbbas/system.h",
-		"/home/abbas/Desktop/macAbbas/idt.c",
-		"/home/abbas/Desktop/macAbbas/irq.c",
 		"/home/abbas/Desktop/macAbbas/gdt.c",
+		"/home/abbas/Desktop/macAbbas/idt.c",
 		"/home/abbas/Desktop/macAbbas/linker.ld",
-		"/home/abbas/Desktop/macAbbas/common.c",
 		"/home/abbas/Desktop/macAbbas/idt.h",
-		"/home/abbas/Desktop/macAbbas/boot.s",
-		"/home/abbas/Desktop/macAbbas/makefile"
+		"/home/abbas/Desktop/macAbbas/boot.s"
 	],
 	"find":
 	{
@@ -193,10 +211,10 @@
 			[
 				{
 					"buffer": 0,
-					"file": "gdt.c",
+					"file": "kernel.c",
 					"settings":
 					{
-						"buffer_size": 1722,
+						"buffer_size": 432,
 						"regions":
 						{
 						},
@@ -214,114 +232,70 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 45.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "vga.c",
 					"settings":
 					{
-						"buffer_size": 2632,
+						"buffer_size": 1017,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1542,
-								1542
+								159,
+								159
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"__vi_external_disable": true,
+							"draw_white_space": "none",
+							"git_repo": "/home/abbas/Desktop/macAbbas",
+							"git_status": true,
+							"git_view": "status",
+							"syntax": "Packages/SublimeGit/syntax/SublimeGit Status.tmLanguage",
+							"translate_tabs_to_spaces": false,
+							"word_wrap": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1605.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "kernel.c",
 					"settings":
 					{
-						"buffer_size": 2833,
+						"buffer_size": 613,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								138,
-								138
+								613,
+								613
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"git_diff_cached": false,
+							"git_diff_clean": false,
+							"git_diff_path": "irq.c",
+							"git_diff_unified": 3,
+							"git_repo": "/home/abbas/Desktop/macAbbas",
+							"git_view": "diff",
+							"syntax": "Packages/SublimeGit/syntax/SublimeGit Diff.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 630.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "common.c",
-					"settings":
-					{
-						"buffer_size": 842,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								628,
-								628
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 405.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "system.h",
-					"settings":
-					{
-						"buffer_size": 1199,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1199,
-								1199
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 545.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -396,7 +370,7 @@
 		[
 			[
 				"",
-				"/home/abbas/Desktop/macAbbas/macAbbas.sublime-project"
+				"/home/abbas/Desktop/arax-code-27/untitled.sublime-project"
 			]
 		],
 		"width": 380.0
