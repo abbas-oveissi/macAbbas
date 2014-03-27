@@ -232,6 +232,9 @@ char * shifScanCodeKeyboard[128] = {
 };
 
 int shift=0;
+extern void backSpaceKey();
+
+
 
 void keyboard_handler(registers_t regs)
 {
@@ -253,7 +256,16 @@ void keyboard_handler(registers_t regs)
 
         }
 
-
+        if(a==28)
+        {
+            terminal_writestring("\n");
+            return;
+        }
+        //if(a==14)
+        //{
+        //    //backSpaceKey();
+        //    return;
+        //}
         if(a<128&&shift==0)
         {
             terminal_writestring(intToStr(shift));
