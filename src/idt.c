@@ -81,7 +81,7 @@ void idt_init()
   idt_set_ir( 31, flags, 0x08 , (uint32_t)isr31);
 
   // system calls interrupt vector
-    idt_set_ir( 80, flags, 0x08 , (uint32_t)isr80 );
+   // idt_set_ir( 80, flags, 0x08 , (uint32_t)isr80 );
 
     idt_install( (uint32_t)&idtp );
     

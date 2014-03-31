@@ -20,5 +20,4 @@ void kernel_main()
         //iin baraye iine kernel hamiish e ejra bashe :D
         */
 	}
-	terminal_writestring("be os man khosh oomadid :D!\nMac Abbas OS");
 }

@@ -1,39 +1,45 @@
+
+CC = i586-elf-gcc 
+ASM = nasm
+OPTIONS = -std=gnu99 -ffreestanding -O2 -w    # -Wall -Wextra
+INCLUDES = -I includes # Directory for header file
+OBJS = main.o module.o # List of objects to be build
+CPath = src/
+AsmPath= src/asm/
+OUTPUT = output/
+VPATH = src/asm/:src
 myOs : boot.o kernel.o irq.o vga.o gdt.o idt.o common.o linker.ld  grub.cfg
-	i586-elf-gcc -T linker.ld -o ../output/myos.bin -ffreestanding -O2 -nostdlib ../output/boot.o ../output/kernel.o ../output/irq.o ../output/vga.o ../output/gdt.o ../output/gdt_s.o ../output/idt.o ../output/idt_s.o ../output/common.o -lgcc
-	mkdir -p ../output/isodir
-	mkdir -p ../output/isodir/boot
-	cp ../output/myos.bin ../output/isodir/boot/myos.bin
-	mkdir -p ../output/isodir/boot/grub
-	cp grub.cfg ../output/isodir/boot/grub/grub.cfg
-	grub-mkrescue -o ../output/myos.iso ../output/isodir
-	qemu-system-i386 -cdrom ../output/myos.iso
+	${CC} ${OPTIONS} -T ${CPath}linker.ld -o ${OUTPUT}myos.bin -ffreestanding -O2 -nostdlib ${OUTPUT}boot.o ${OUTPUT}kernel.o ${OUTPUT}irq.o ${OUTPUT}vga.o ${OUTPUT}gdt.o ${OUTPUT}gdt_s.o ${OUTPUT}idt.o ${OUTPUT}idt_s.o ${OUTPUT}common.o -lgcc
+	mkdir -p ${OUTPUT}isodir
+	mkdir -p ${OUTPUT}isodir/boot
+	cp ${OUTPUT}myos.bin ${OUTPUT}isodir/boot/myos.bin
+	mkdir -p ${OUTPUT}isodir/boot/grub
+	cp ${CPath}grub.cfg ${OUTPUT}isodir/boot/grub/grub.cfg
+	grub-mkrescue -o ${OUTPUT}myos.iso ${OUTPUT}isodir
+	qemu-system-i386 -cdrom ${OUTPUT}myos.iso
 
 
 
 boot.o : boot.s
-	nasm boot.s -f elf -o ../output/boot.o
-
+	${ASM} ${AsmPath}boot.s -f elf -o ${OUTPUT}boot.o
 
 kernel.o : kernel.c
-	i586-elf-gcc -w -c kernel.c -o ../output/kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}kernel.c -o ${OUTPUT}kernel.o 
 
 irq.o : irq.c
-	i586-elf-gcc -c irq.c -o  ../output/irq.o -ffreestanding -std=gnu99
-
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}irq.c -o  ${OUTPUT}irq.o 
 
 vga.o : vga.c
-	i586-elf-gcc -c vga.c -o  ../output/vga.o -ffreestanding -std=gnu99
-
-
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}vga.c -o  ${OUTPUT}vga.o 
 
 gdt.o : gdt.c gdt_s.s
-	i586-elf-gcc -c gdt.c -o  ../output/gdt.o -ffreestanding -std=gnu99
-	nasm gdt_s.s -f elf -o ../output/gdt_s.o
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}gdt.c -o  ${OUTPUT}gdt.o
+	${ASM} ${AsmPath}gdt_s.s -f elf -o ${OUTPUT}gdt_s.o
 
 
-idt.o : idt.c idt_s.s
-	i586-elf-gcc -c idt.c -o  ../output/idt.o -ffreestanding -std=gnu99
-	nasm idt_s.s -f elf -o ../output/idt_s.o
+idt.o : idt.c idt_s.s            
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}idt.c -o  ${OUTPUT}idt.o
+	${ASM} ${AsmPath}idt_s.s -f elf -o ${OUTPUT}idt_s.o
 
 common.o :
-	i586-elf-gcc -c common.c -o  ../output/common.o -ffreestanding -std=gnu99
+	${CC} ${OPTIONS} ${INCLUDES} -c ${CPath}common.c -o  ${OUTPUT}common.o
