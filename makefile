@@ -1,7 +1,7 @@
 
 CC = i586-elf-gcc 
 ASM = nasm
-OPTIONS = -std=gnu99 -ffreestanding -O2 -w    # -Wall -Wextra
+OPTIONS = -std=gnu99 -ffreestanding  -w  # -Wall -Wextra -O2
 INCLUDES = -I includes # Directory for header file
 OBJS = main.o module.o # List of objects to be build
 CPath = src/
