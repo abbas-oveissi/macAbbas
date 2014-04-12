@@ -43,20 +43,86 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/kernel.c",
+			"settings":
+			{
+				"buffer_size": 671,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/mem.c",
+			"settings":
+			{
+				"buffer_size": 837,
+				"line_ending": "Unix",
+				"name": "mem.c"
+			}
+		},
+		{
+			"file": "src/asm/mem_s.s",
+			"settings":
+			{
+				"buffer_size": 305,
+				"line_ending": "Unix",
+				"name": "mem_s.s"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 390.0,
+		"height": 117.0,
 		"selected_items":
 		[
 			[
-				"pack",
-				"Package Control: List Packages"
+				"git push",
+				"Git: Push Current Branch"
+			],
+			[
+				"git pu",
+				"Git: Pull Current Branch"
+			],
+			[
+				"git st",
+				"Git: Status"
+			],
+			[
+				"gits",
+				"Git: Status"
+			],
+			[
+				"git s",
+				"Git: Status"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
 			],
 			[
 				"packa",
 				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"push",
+				"Git: Push Current Branch"
+			],
+			[
+				"git",
+				"Git: Status"
+			],
+			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"gitstat",
+				"Git: Status"
 			],
 			[
 				"package inst",
@@ -64,10 +130,6 @@
 			],
 			[
 				"git statu",
-				"Git: Status"
-			],
-			[
-				"git stat",
 				"Git: Status"
 			],
 			[
@@ -92,10 +154,6 @@
 			],
 			[
 				"pus",
-				"Git: Push Current Branch"
-			],
-			[
-				"push",
 				"Git: Push Current Branch"
 			],
 			[
@@ -128,9 +186,18 @@
 	},
 	"file_history":
 	[
+		"/home/abbas/Desktop/macAbbas/makefile",
+		"/home/abbas/Desktop/macAbbas/src/idt.c",
+		"/home/abbas/Desktop/macAbbas/src/irq.c",
+		"/home/abbas/Desktop/macAbbas/src/kernel.c",
+		"/home/abbas/Desktop/macAbbas/src/asm/idt_s.s",
+		"/home/abbas/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/abbas/Desktop/macAbbas/src/asm/boot.s",
+		"/home/abbas/Desktop/macAbbas/include/idt.h",
+		"/home/abbas/Desktop/macAbbas/.gitignore",
+		"/home/abbas/Desktop/macAbbas/output/justForTrack",
 		"/home/abbas/Desktop/macAbbas/boot.s",
 		"/home/abbas/Desktop/macAbbas/kernel.c",
-		"/home/abbas/Desktop/macAbbas/makefile",
 		"/home/abbas/Desktop/macAbbas/irq.c",
 		"/home/abbas/Desktop/macAbbas/system.h",
 		"/home/abbas/Desktop/macAbbas/common.c",
@@ -156,6 +223,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"u32int",
+			"writestring",
+			"IDT_DESC_PRESENT",
+			"../output/",
+			"CC",
+			"cc",
+			"CC",
+			"cc",
+			"CC",
+			"-ffreestanding -std=gnu99",
+			"i586-elf-gcc",
 			"'",
 			"bchars",
 			"base",
@@ -190,6 +268,115 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/kernel.c",
+					"settings":
+					{
+						"buffer_size": 671,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								456,
+								456
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/mem.c",
+					"settings":
+					{
+						"buffer_size": 837,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								143,
+								143
+							],
+							[
+								160,
+								160
+							],
+							[
+								383,
+								383
+							],
+							[
+								462,
+								462
+							],
+							[
+								479,
+								479
+							],
+							[
+								503,
+								503
+							],
+							[
+								769,
+								769
+							]
+						],
+						"settings":
+						{
+							"auto_name": "mem.c",
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/asm/mem_s.s",
+					"settings":
+					{
+						"buffer_size": 305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								224,
+								224
+							]
+						],
+						"settings":
+						{
+							"auto_name": "mem_s.s",
+							"syntax": "Packages/R/R.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -242,6 +429,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"gitst",
+				"*git-status*: macAbbas"
+			],
 			[
 				"sys",
 				"system.h"

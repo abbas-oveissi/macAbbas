@@ -13,6 +13,9 @@ void kernel_main()
     idt_init();
     pic_init();
     __asm__ __volatile__ ("sti");
+    terminal_writestring("          +--------------------------------------------------------+\n");
+    terminal_writestring("          |                 MacAbbas Operating System              |\n");
+    terminal_writestring("          +--------------------------------------------------------+\n\n\n");   
 
 	while(true)
 	{
