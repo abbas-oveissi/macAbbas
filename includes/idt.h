@@ -1,4 +1,3 @@
-
 #define IDT_DESC_BIT16    0x06  //00000110
 #define IDT_DESC_BIT32    0x0E  //00001110
 #define IDT_DESC_RING0    0x0   //00000000
@@ -6,10 +5,6 @@
 #define IDT_DESC_RING2    0x20  //00100000
 #define IDT_DESC_RING3    0x60  //01100000
 #define IDT_DESC_PRESENT  0x80  //10000000
-
-
-
-
 //================================
 // exceptions
 //================================
