@@ -69,8 +69,6 @@ void irq_handler(registers_t regs)
 
 }
 
-
-
 #define PIC1_REG_COMMAND    0x20
 #define PIC1_REG_DATA       0x21
 #define PIC2_REG_COMMAND    0xA0
