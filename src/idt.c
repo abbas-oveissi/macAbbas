@@ -2,9 +2,6 @@
 #include <stdint.h>
 #include "idt.h"
 
-
-
-
 extern void register_isr( unsigned char n, isr_t handler );
 extern void isr_none(registers_t);
 
@@ -38,13 +35,13 @@ extern void idt_install(uint32_t);
 
 void idt_init()
 {
-    idtp.limit = sizeof(struct idt_entry) * MAX_INTERRUPTS -1;
-    idtp.base  = (uint32_t)&idt;
+  idtp.limit = sizeof(struct idt_entry) * MAX_INTERRUPTS -1;
+  idtp.base  = (uint32_t)&idt;
 
-    memset(&idt, 0, sizeof(struct idt_entry)*MAX_INTERRUPTS);
+  memset(&idt, 0, sizeof(struct idt_entry)*MAX_INTERRUPTS);
     
     
-    uint8_t flags = IDT_DESC_PRESENT | IDT_DESC_RING0 | IDT_DESC_BIT32;
+  uint8_t flags = IDT_DESC_PRESENT | IDT_DESC_RING0 | IDT_DESC_BIT32;
 
   // isr
   idt_set_ir( 0, flags, 0x08 , (uint32_t)isr0);
@@ -80,13 +77,9 @@ void idt_init()
   idt_set_ir( 30, flags, 0x08 , (uint32_t)isr30);
   idt_set_ir( 31, flags, 0x08 , (uint32_t)isr31);
 
-  // system calls interrupt vector
-   // idt_set_ir( 80, flags, 0x08 , (uint32_t)isr80 );
-
-    idt_install( (uint32_t)&idtp );
+  idt_install( (uint32_t)&idtp );
     
-    memset(&interrupt_handlers,0, sizeof(isr_t)*MAX_INTERRUPTS);
-
+  memset(&interrupt_handlers,0, sizeof(isr_t)*MAX_INTERRUPTS);
 }
 
 // idt_set_ir
