@@ -47,26 +47,8 @@
 			"file": "src/kernel.c",
 			"settings":
 			{
-				"buffer_size": 671,
+				"buffer_size": 729,
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/mem.c",
-			"settings":
-			{
-				"buffer_size": 837,
-				"line_ending": "Unix",
-				"name": "mem.c"
-			}
-		},
-		{
-			"file": "src/asm/mem_s.s",
-			"settings":
-			{
-				"buffer_size": 305,
-				"line_ending": "Unix",
-				"name": "mem_s.s"
 			}
 		}
 	],
@@ -78,15 +60,15 @@
 		[
 			[
 				"git push",
-				"Git: Push Current Branch"
-			],
-			[
-				"git pu",
-				"Git: Pull Current Branch"
+				"Git: Push"
 			],
 			[
 				"git st",
 				"Git: Status"
+			],
+			[
+				"git pu",
+				"Git: Pull Current Branch"
 			],
 			[
 				"gits",
@@ -186,6 +168,8 @@
 	},
 	"file_history":
 	[
+		"/home/abbas/Desktop/macAbbas/src/asm/mem_s.s",
+		"/home/abbas/Desktop/macAbbas/src/mem.c",
 		"/home/abbas/Desktop/macAbbas/makefile",
 		"/home/abbas/Desktop/macAbbas/src/idt.c",
 		"/home/abbas/Desktop/macAbbas/src/irq.c",
@@ -266,6 +250,7 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -273,15 +258,15 @@
 					"file": "src/kernel.c",
 					"settings":
 					{
-						"buffer_size": 671,
+						"buffer_size": 729,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								456,
-								456
+								286,
+								286
 							]
 						],
 						"settings":
@@ -289,87 +274,6 @@
 							"syntax": "Packages/C++/C.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/mem.c",
-					"settings":
-					{
-						"buffer_size": 837,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								143,
-								143
-							],
-							[
-								160,
-								160
-							],
-							[
-								383,
-								383
-							],
-							[
-								462,
-								462
-							],
-							[
-								479,
-								479
-							],
-							[
-								503,
-								503
-							],
-							[
-								769,
-								769
-							]
-						],
-						"settings":
-						{
-							"auto_name": "mem.c",
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/asm/mem_s.s",
-					"settings":
-					{
-						"buffer_size": 305,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								224,
-								224
-							]
-						],
-						"settings":
-						{
-							"auto_name": "mem_s.s",
-							"syntax": "Packages/R/R.tmLanguage",
-							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
