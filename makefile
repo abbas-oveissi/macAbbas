@@ -1,4 +1,3 @@
-
 CC = i586-elf-gcc 
 ASM = nasm
 OPTIONS = -std=gnu99 -ffreestanding  -w  # -Wall -Wextra -O2
@@ -17,8 +16,6 @@ myOs : boot.o kernel.o irq.o vga.o gdt.o idt.o common.o linker.ld  grub.cfg
 	cp ${CPath}grub.cfg ${OUTPUT}isodir/boot/grub/grub.cfg
 	grub-mkrescue -o ${OUTPUT}myos.iso ${OUTPUT}isodir
 	qemu-system-i386 -cdrom ${OUTPUT}myos.iso
-
-
 
 boot.o : boot.s
 	${ASM} ${AsmPath}boot.s -f elf -o ${OUTPUT}boot.o
