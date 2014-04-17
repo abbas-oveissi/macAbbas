@@ -24,4 +24,4 @@ write_cr3:
 	mov eax, [ebp+8]
 	mov cr3, eax
 	pop ebp
-	retn
+	retn 
