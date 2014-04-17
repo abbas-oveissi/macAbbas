@@ -2,12 +2,12 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "system.h"
-//bayad compiler i386 bashe
 
 size_t g_sStack[4094];  
 
 void kernel_main()
 {
+
 	terminal_initialize();
     gdt_init();
     idt_init();
