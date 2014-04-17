@@ -1,9 +1,3 @@
-;###############################################################################
-;#	title:	iterrupt descriptor table for x86
-;#	file:	idt_s.s
-;#	Copyright (c) march-2010 Pooya Shahinfar (Pswin)
-;###############################################################################
-
 [GLOBAL idt_install]    ; Allows the C code to call idtInstall.
 
 ; In isr.c

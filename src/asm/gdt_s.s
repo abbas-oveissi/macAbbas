@@ -1,9 +1,3 @@
-;###############################################################################
-;# title: contains gdt_install function routine
-;# file:  gdt.s
-;# Copyright (c) March-2010 Pooya Shahinfar (Pswin)
-;###############################################################################
-
 [GLOBAL gdt_install]    ; Allows the C code to call gdtInstall().
 
 gdt_install:
