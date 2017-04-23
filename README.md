@@ -9,6 +9,7 @@
 # نیازمندی‌ها
 
 + [نیازمندی‌های فریم‌ورک لاراول](https://laravel.com/docs/5.4#server-requirements)
+
 + فعال بودن افزونه fileinfo در PHP
 
 # راهنمای نصب
@@ -20,15 +21,20 @@
 2. فایل env.example. را در پوشه‌ی local به env. تغییر داده و اطلاعات مربوط به خودتان را برای تنظیمات DB و APP وارد کنید ( برای استفاده از فرم تماس، اطلاعات Mail را هم باید وارد کنید. )
 
 3. در پوشه‌ی همان پوشه‌ی local دستورات زیر را اجرا کنید.
+
 4. دستور نصب dependencyها
 
 <pre dir="ltr">composer install</pre>
 
 5.  دستور ساخت جدول‌های مورد نیاز پروژه در دیتابیس
-	<pre dir="ltr">php artisan migrate</pre>
+
+<pre dir="ltr">php artisan migrate</pre>
+
 6. دستور ساخت application key
-	<pre dir="ltr">php artisan key:generate</pre>
+
+<pre dir="ltr">php artisan key:generate</pre>
 
 7. اگر میخواهید اطلاعات ۱۵ فیلم برتر به همراه ژانرشان در جدول‌ها باشد، دستور زیر را هم اجرا کنید.
 
-	<pre dir="ltr">php artisan db:seed</pre>
+<pre dir="ltr">php artisan db:seed</pre>
+
