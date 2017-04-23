@@ -22,7 +22,8 @@
 3. در پوشه‌ی همان پوشه‌ی local دستورات زیر را اجرا کنید.
 4. دستور نصب dependencyها
 
-	<pre dir="ltr">composer install</pre>
+<pre dir="ltr">composer install</pre>
+
 5.  دستور ساخت جدول‌های مورد نیاز پروژه در دیتابیس
 	<pre dir="ltr">php artisan migrate</pre>
 6. دستور ساخت application key
