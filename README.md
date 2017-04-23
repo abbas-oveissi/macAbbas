@@ -22,12 +22,12 @@
 3. در پوشه‌ی همان پوشه‌ی local دستورات زیر را اجرا کنید.
 4. دستور نصب dependencyها
 
-	composer install
+	<pre dir="ltr">composer install</pre>
 5.  دستور ساخت جدول‌های مورد نیاز پروژه در دیتابیس
-	php artisan migrate
+	<pre dir="ltr">php artisan migrate</pre>
 6. دستور ساخت application key
-	php artisan key:generate
+	<pre dir="ltr">php artisan key:generate</pre>
 
 7. اگر میخواهید اطلاعات ۱۵ فیلم برتر به همراه ژانرشان در جدول‌ها باشد، دستور زیر را هم اجرا کنید.
 
-	php artisan db:seed
+	<pre dir="ltr">php artisan db:seed</pre>
